@@ -15,23 +15,11 @@ app.use(cors()); // Enable cross-origin requests
 
 // Dynamic route loading
 readdirSync("./routes").forEach((routeFile) => {
-  app.use("/api/v1", require(`./routes/${routeFile}`));
+  app.use("/api", require(`./routes/${routeFile}`));
 });
 
-// Start the server
-const startServer = async () => {
-  try {
-    // Connect to the database
+// Connect to the database for serverless deployment
+connectDB();
+
+module.exports = app;
     await connectDB();
-
-    // Start Express server
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
-  } catch (error) {
-    console.error("Server startup error:", error.message);
-    process.exit(1); // Terminate if server can't start
-  }
-};
-
-startServer();
